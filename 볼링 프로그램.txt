@@ -1,0 +1,82 @@
+#include<stdio.h>
+int main() {
+	char c[22];
+	scanf("%s", &c);
+	int point = 0;
+	int frame = 1;
+	int start;
+	for (int i = 0; c[i] != '\0'; i++) {//8프레임 까지만 처리
+		if (frame < 19) {
+			if (c[i] == 'S') {
+				if (c[i + 1] == 'S' && c[i + 2] == 'S') {//S S S
+					point += 20;
+				}
+				else if (c[i + 1] == 'S'&&c[i+2] != 'S'&& c[i+2] != '-') {//S S 숫자
+					point += 10;
+					point += (c[i + 2] - 48);
+				}
+				else if (c[i + 1] != 'S' && c[i + 1] != '-' && c[i+2] != 'S' && c[i+2] != '-' && c[i+2] != 'P') {//S 숫자 숫자
+					point += (c[i + 1] - 48);
+					point += (c[i + 2] - 48);
+				}
+				else if (c[i + 1] != 'S' && c[i + 1] != '-' && c[i + 2] != 'S' && c[i + 2] != '-' && c[i + 2] == 'P') {//S 숫자 P
+					point += (c[i + 1] - 48);
+					point += (10-c[i+1]+48);
+				}
+				else if (c[i + 1] != '-' && c[i + 1] != 'S' && c[i + 2] == '-') {
+					point += (c[i + 1] - 48);
+				}
+				else if (c[i + 1] == '-'&&c[i + 2] == 'P') {
+					point += 10;
+				}
+				point += 10;
+				frame++;
+			}
+			else if (c[i] == 'P') {
+				if (c[i - 1] == '-' && c[i+1] != 'S' && c[i+1] != '-') {//- P 숫자
+					point += 10;
+					point += (c[i + 1] - 48);
+				}
+				else if (c[i - 1] == '-' && c[i+1]=='S') {//- P S
+					point += 10;
+					point += 10;
+				}
+				else if (c[i - 1] != '-'&& c[i-1] != 'S' && c[i+1]=='S') {//숫자 P S
+					point += 10;
+					point += (10 - c[i - 1] + 48);
+				}
+				else if(c[i-1] !='-'&&c[i-1]!='S' && c[i+1] != 'S'&&c[i+1]=='-'){//숫자 P -
+					point += (10 - c[i - 1] + 48);
+				}
+				else if (c[i - 1] != '-'&& c[i-1] != 'S'&& c[i + 1] != '-'&&c[i+1] != 'S') {//숫자 P 숫자
+					point += (10 - c[i - 1] + 48);
+					point += (c[i + 1] - 48);
+				}
+			}
+			else if (c[i] == '-') {
+				point += 0;
+			}
+			else {
+				point += (c[i] - 48);
+			}
+		}
+		else {
+			if (c[i] == 'S') {
+				point += 10;
+				frame++;
+			}
+			else if (c[i] == 'P') {
+				point += (10 - c[i - 1] + 48);
+			}
+			else if (c[i] == '-') {
+				point += 0;
+			}
+			else {
+				point += (c[i] - 48);
+			}
+		}
+		frame++;
+	}
+	printf("%d\n", point);
+	return 0;
+}

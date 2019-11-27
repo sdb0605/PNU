@@ -1,0 +1,44 @@
+<%@page import="day07.MemberDAO"%>
+<%@page import="day07.Member"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+request.setCharacterEncoding("UTF-8");
+MemberDAO dao = new MemberDAO();
+String userid = request.getParameter("userid");
+Member vo = dao.getMember(request.getParameter("userid"));
+if(vo.getUserid() != null && vo.getUserpw().equals(request.getParameter("userpw"))){
+	session.setAttribute("login", vo);
+	Cookie sc = new Cookie("JSESSIONID",session.getId());
+	sc.setMaxAge(6000);
+	response.addCookie(sc);%>
+	<script>
+		alert("<%=vo.getUsername() %>님, 로그인을 환영합니다.");
+		location.href="main.jsp";
+	</script><%
+}
+else{%>
+	<script>
+		alert("계정 정보를 다시 확인해주세요!");
+		location.href="<%= request.getContextPath()%>";
+	</script><%
+}
+%>
+
+<%--
+	index.jsp의 모든 input들을 request에서 추출하여
+	Member.java 클래스 파일ㄹ 비어있는 객체를 생성하고
+	객체의 멤버 필드 중 form의 input과 이름이 일치하는 데이터를 찾아서
+	각 필드의 값으로 저장한다
+ --%>
+
+ 
+</body>
+</html>

@@ -1,0 +1,26 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h2 style="text-align:center;color:lime;">회원가입</h2>
+
+<form action="insert.jsp" method="post">
+	<table align="center" border="1" cellpadding="7" cellspacing="0">
+	<tr><td>ID</td><td><input name="userid" required></td></tr>	
+	<tr><td>PW</td><td><input name="userpw" type="password" required></td></tr>	
+	<tr><td>이름</td><td><input name="username" required></td></tr>	
+	<tr><td>나이</td><td><input name="age" required></td></tr>	
+	<tr><td>성별</td><td><input name="gender" required></td></tr>	
+	<tr><td>전화번호</td><td><input name="phone" required></td></tr>	
+	<tr><td>주소</td><td><input name="address"></td></tr>
+	<tr><td colspan="2"><input type="submit" value="가입신청"></td></tr>
+	</table>
+</form>
+
+</body>
+</html>

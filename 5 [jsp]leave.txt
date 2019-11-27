@@ -1,0 +1,29 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="day07.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%--
+	1. 회원 탈퇴는 회원 정보 페이지에서 이어지며, 로그인 한 상태이다
+	2. 회원탈퇴를 다시 한번 컨펌 받기 위해서, 사용자의 패스워드를 재 확인하는 과정을 거치도록 만들기
+	3. delet.jsp에서 데이터를 전달 받아서 패스워드가 일치하면 회원 탈퇴 처리
+		(delet from [테이블 이름] where [조건])
+ --%>
+ <%
+ 	String id = ((Member)session.getAttribute("login")).getUserid();
+ %>
+ <h3 style="color:red;text-align:center;">회원 정보를 삭제합니다</h3>
+ <h3 style="color:red;text-align:center;">확인을 위해 비밀번호를 입력해주세요</h3>
+ <form action="delet.jsp" method="post">
+ <table align="center" cellpadding="5">
+ 	<tr><td>ID</td><td><%=id %></td></tr>
+ 	<tr><td>PW</td><td><input name="userpw" type="password" placeholder="비밀번호 입력"></td></tr>
+ 	<tr><td colspan="2"><input type="submit" value="탈퇴"></td></tr>
+ </table>
+ </form>
+</body>
+</html>

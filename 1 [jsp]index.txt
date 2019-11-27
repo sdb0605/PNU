@@ -1,0 +1,34 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="day07.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style="text-decoration:none;text-align:center;font-size:14pt;font-weight:bolder;">
+<%--
+ 	<%@ include file="header.jsp" %>
+ --%>
+<a href="https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com"><h1 style="font-family:Comic Sans MS;font-size:45pt;color:lime;">
+	NAVER</h1></a>
+<%
+	//만약, 세션에login이라는 이름의 Member 객체가 존재하면 main.jsp로 페이지 이동
+	Member login = null;
+	login = (Member)session.getAttribute("login");
+	if(login != null){
+		response.sendRedirect("main.jsp");
+	}
+%>
+<%--style : css에서 관리하는 디자인 요소를 적용 --%>
+<form action = "login.jsp" method="post">
+<table align="center">
+	<tr><td><input name="userid" placeholder="아이디"></td></tr>
+	<tr><td><input name="userpw" type="password" placeholder ="비밀번호"></td></tr>
+	<tr><td><input type="submit" value="로그인"></td></tr>
+</table>
+</form>
+<br><hr width="300"><br>
+<p><a href="join.jsp"><button>회원가입</button></a></p>
+</body>
+</html>

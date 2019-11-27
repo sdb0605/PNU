@@ -1,0 +1,80 @@
+<%@page import="day07.Member"%>
+<%@page import="day07.MemberDAO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+	request.setCharacterEncoding("UTF-8");
+	String name="정보x",age="정보x",userid="정보x",address="정보x",phone="정보x",gender="정보x",userpw="정보x";
+	
+	//Member login = (Member)session.getAttribute("login");
+	//세션에서 정보를 받아올 수도 있으나, 정보의 수정이 발생한 경우 실시간으로 반영되지 않는다
+	MemberDAO dao = new MemberDAO();
+	String id = ((Member)session.getAttribute("login")).getUserid();
+	Member login = dao.getMember(id);
+	
+	if(login == null){
+		%>
+		<script>
+			alert("로그인해야 회원정보를 확인할 수 있습니다.");
+			location.href = "<%=request.getContextPath() %>"
+		</script>
+		<%
+	}
+	else{
+		name=login.getUsername();
+		age=login.getAge();
+		gender=login.getGender();
+		address=login.getAddress();
+		userid=login.getUserid();
+		phone=login.getPhone();
+		userpw="보지마세요";
+	
+%>
+<form>
+<table border="3" cellpadding="7" cellspacing="2">
+	<tr>
+		<td colspan="2">회원 정보</td>
+	</tr>
+	<tr>
+		<td>이름</td>
+		<td><%=name %></td>
+	</tr>
+	<tr>
+		<td>나이</td>
+		<td><%=age %></td>
+	</tr>
+	<tr>
+		<td>성별</td>
+		<td><%=gender %></td>
+	</tr>
+	<tr>
+		<td>휴대폰 번호</td>
+		<td><%=phone %></td>
+	</tr>
+	<tr>
+		<td>집 주소</td>
+		<td><%=address %></td>
+	</tr>
+	<tr>
+		<td>아이디</td>
+		<td><%=userid %></td>
+	</tr>
+	<tr>
+		<td>비밀번호</td>
+		<td style="color:red;"><%=userpw %></td>
+	</tr>
+</table>
+<%
+}
+%>
+</form>
+<p><a href="modify_info.jsp"><button>회원 정보 수정</button></a></p>
+</body>
+</html>

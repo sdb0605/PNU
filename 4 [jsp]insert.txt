@@ -1,0 +1,53 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="day07.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+request.setCharacterEncoding("UTF-8");
+%>
+
+<jsp:useBean id="info" class="day07.Member"></jsp:useBean>
+<jsp:setProperty property="*" name="info"/>
+<%
+MemberDAO dao = new MemberDAO();
+int result = 0;	
+int resultCheck = 0;
+resultCheck = dao.CheckID(request.getParameter("userid"));
+if(resultCheck == 0){
+	if(result == 0){
+		result = dao.insertMember(info);
+		%>
+		<script>
+		alert("회원가입이 정상적으로 처리가 완료되었습니다. 로그인화면으로 전환합니다.");
+		location.href="index.jsp";
+		</script>
+		<%
+	}
+	else{
+		%>
+		<script>
+		alert("회원가입이 처리되지 않았습니다.");
+		location.href="join.jsp";
+		</script>
+		<%
+	}
+}
+else{
+	%>
+	<script>
+	alert("이미 사용중인 아이디 입니다");
+	location.href="join.jsp";
+	</script>
+	<%
+}
+	
+
+
+%>
+</body>
+</html>

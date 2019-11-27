@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="day07.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+request.setCharacterEncoding("UTF-8");
+String pw = ((Member)session.getAttribute("login")).getUserpw();
+String sessid = ((Member)session.getAttribute("login")).getUserid();
+String userpw = request.getParameter("userpw");
+MemberDAO dao = new MemberDAO();
+int result=0;
+
+if(!pw.equals(userpw)){
+	%>
+		<script>
+		alert("비밀번호가 일치하지 않습니다.");history.go(-1);
+		</script>
+	<%
+}
+else{//탈퇴가 정상적으로 처리되었다면 현제 세션을 로그아웃 시킨다.
+	session.invalidate();
+	if(result == 0){
+	result=dao.DeletMember(sessid);
+	%>
+		<script>
+			alert("탈퇴처리가 정상적으로 실행됬습니다. 이용해주셔서 감사합니다.");
+			location.href="index.jsp";
+		</script>
+	
+	<%
+	}
+	else{
+		%>
+		<script>
+		alert("탈퇴처리가 실행되지 않았습니다.");
+		history.go(-1);
+		</script>
+	<%
+	}
+}
+
+
+
+%>
+</body>
+</html>

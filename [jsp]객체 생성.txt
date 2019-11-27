@@ -1,0 +1,197 @@
+package day07;
+
+import java.sql.*;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+public class MemberDAO {
+	private Connection conn;
+	private Context init;
+	private DataSource ds;
+	private String sql;
+	private PreparedStatement pstmt;
+	private ResultSet rs;
+	
+	//생성자 : 객체 생성시 초기 작업을 위한 메서드	
+	public MemberDAO() {
+		try {
+			init = (Context) new InitialContext();
+			ds = (DataSource) init.lookup("java:comp/env/jdbc/oracle");
+			
+		}catch(Exception e) {
+			System.out.println("Execption :"+e);
+		}finally {
+			if(conn != null) try {conn.close();}catch(Exception e) {}
+		}
+		
+	}
+	
+	public Member getMember(String id) { 
+		//DB에 연결해서 select 쿼리문을 전달하고 받은 멤버의 정보를 객체에 저장하여 반환하는 메소드
+		Member vo = new Member();
+		try {
+			conn = ds.getConnection();
+			sql="select * from day07 where userid=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,id);
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {				
+				//결과 셋에서 age에 해당하는 값을 꺼내와서, 생성한 객체의 age필드에 값으로 넣어준다(DB -> Beans객체)
+				vo.setAge(rs.getString("age"));
+				vo.setAddress(rs.getString("address"));
+				vo.setGender(rs.getString("gender"));
+				vo.setPhone(rs.getString("phone"));
+				vo.setUserid(rs.getString("userid"));
+				vo.setUsername(rs.getString("username"));
+				vo.setUserpw(rs.getString("userpw"));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{									//예외 발생여부에 상관없이
+			if(rs !=null){
+				try{rs.close();}catch(SQLException e){}//생성의 역순으로 rs를 close하고
+			}
+			if(pstmt !=null){
+				try{pstmt.close();}catch(SQLException e){}//stmt를 close
+			}
+			if(conn !=null){
+				try{conn.close();}catch(SQLException e){}//최종으로 conn을 close하여 연결을 끊어준다
+			}
+		}
+		return vo;// 모든 필드의 값이 준비된 beans객체를 반환한다.
+	}
+	
+	public int updateMember(Member m) {
+		int result = 0;
+		try {
+			conn = ds.getConnection();
+			sql="update day07 set age=?,gender=?,username=?,userpw=?,address=?,phone=? where userid=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,m.getAge());
+			pstmt.setString(2,m.getGender());
+			pstmt.setString(3,m.getUsername());
+			pstmt.setString(4,m.getUserpw());
+			pstmt.setString(5,m.getAddress());
+			pstmt.setString(6,m.getPhone());
+			pstmt.setString(7,m.getUserid());
+			result = pstmt.executeUpdate();//select문은 execudeQuery()함수를 호출하여 resultset형식을 반환
+											//update 혹은 insert 문은 executeUpdate()함수를 호출하여 int를 반환
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{									//예외 발생여부에 상관없이
+			if(rs !=null){
+				try{rs.close();}catch(SQLException e){}//생성의 역순으로 rs를 close하고
+			}
+			if(pstmt !=null){
+				try{pstmt.close();}catch(SQLException e){}//stmt를 close
+			}
+			if(conn !=null){
+				try{conn.close();}catch(SQLException e){}//최종으로 conn을 close하여 연결을 끊어준다
+			}
+		}
+		
+		return result;
+		
+	}
+	
+	//=======================================================================================================================
+	
+	public int insertMember(Member m) {
+		int result=0;
+		try {
+			conn = ds.getConnection();
+			sql="insert into day07 values (?,?,?,?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,m.getUserid());
+			pstmt.setString(2,m.getUserpw());
+			pstmt.setString(3,m.getUsername());
+			pstmt.setString(4,m.getAge());
+			pstmt.setString(5,m.getGender());
+			pstmt.setString(6,m.getPhone());
+			pstmt.setString(7,m.getAddress());
+			result = pstmt.executeUpdate();
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{									//예외 발생여부에 상관없이
+			if(rs !=null){
+				try{rs.close();}catch(SQLException e){}//생성의 역순으로 rs를 close하고
+			}
+			if(pstmt !=null){
+				try{pstmt.close();}catch(SQLException e){}//stmt를 close
+			}
+			if(conn !=null){
+				try{conn.close();}catch(SQLException e){}//최종으로 conn을 close하여 연결을 끊어준다
+			}
+		}
+		
+		return result;
+	}
+	
+	//=======================================================================================================================
+	
+	public int CheckID(String id) {
+		int result = 0;
+		try {
+			conn = ds.getConnection();
+			sql="select * from day07 where userid=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,id);
+			result=pstmt.executeUpdate();
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{									//예외 발생여부에 상관없이
+			if(rs !=null){
+				try{rs.close();}catch(SQLException e){}//생성의 역순으로 rs를 close하고
+			}
+			if(pstmt !=null){
+				try{pstmt.close();}catch(SQLException e){}//stmt를 close
+			}
+			if(conn !=null){
+				try{conn.close();}catch(SQLException e){}//최종으로 conn을 close하여 연결을 끊어준다
+			}
+		}
+		//전달 받은 ID를 이용해서 select문을 전송하고, 그 결과가 있는지 업는지 확인해서 반환
+		return result;
+		
+	}
+	
+	//=============================================================================
+	public int DeletMember(String id) {
+		int result = 0;
+		try {
+			conn = ds.getConnection();
+			sql="delete from day07 where userid=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,id);
+			result=pstmt.executeUpdate();
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{									//예외 발생여부에 상관없이
+			if(rs !=null){
+				try{rs.close();}catch(SQLException e){}//생성의 역순으로 rs를 close하고
+			}
+			if(pstmt !=null){
+				try{pstmt.close();}catch(SQLException e){}//stmt를 close
+			}
+			if(conn !=null){
+				try{conn.close();}catch(SQLException e){}//최종으로 conn을 close하여 연결을 끊어준다
+			}
+		}
+		//전달 받은 ID를 이용해서 select문을 전송하고, 그 결과가 있는지 업는지 확인해서 반환
+		return result;
+		
+	}
+	
+	
+	
+	
+	
+	
+}

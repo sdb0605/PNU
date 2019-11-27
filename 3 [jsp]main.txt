@@ -1,0 +1,20 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="day07.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style="text-align:center">
+<div style="font-size:14pt;font-weight:bolder;">
+	<a href="show_info.jsp">내 정보 확인하기</a>
+</div>
+<%
+	Member login = (Member)session.getAttribute("login");
+%>
+<h3 style="color:fuchsia;"><%=login.getUsername()%>님으로 로그인 되어 있습니다.</h3>
+<a href="logout.jsp"><button>로그아웃</button></a>
+<a href="leave.jsp"><button>회원 탈퇴</button></a>
+</body>
+</html>

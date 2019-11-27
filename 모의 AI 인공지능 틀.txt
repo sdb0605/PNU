@@ -1,0 +1,655 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include <Windows.h>
+#define EMPTY 0
+
+typedef struct node2 { //전화번호부 정보를 담은 구조체
+	char Cname[20];char Ccall[30];
+	struct node2 * linkC;//다음 구조체랑 이어주기 위해서 만드는 linkC
+}Store;
+Store * getnode1() { // 전화번호부를 추가 해줄 공간할당
+	Store * tmp1 = (Store*)malloc(sizeof(Store));tmp1->linkC = EMPTY;
+	return tmp1;
+}
+void addC(Store ** store) { // 전화번호 추가 함수
+	//main함수에서 Store * store라는 포인터 구조체를 만들어놓음
+	char tmpName[20];char tmpCall[30];
+	if (*store == EMPTY) {
+		*store = getnode1();//heap영역을 만들어주는 함수
+		printf("저장할 이름 입력 >>");
+		scanf("%s", tmpName);
+		scanf("%s", tmpCall);
+		strcpy((*store)->Ccall, tmpCall);
+		strcpy((*store)->Cname, tmpName);
+		return;
+	}
+	addC(&(*store)->linkC);//다음 구조체 linkC랑 연결
+}
+void listC(Store **store) { //전화번호 목록
+	Store * tmp = *store;
+	while (tmp != EMPTY) {
+		printf("┌--\n");
+		printf("%s >> %s\n", (tmp)->Cname, (tmp)->Ccall);
+		printf("		 --┘\n");
+		tmp = (*tmp).linkC;
+	}
+}
+void cdel(Store **store, char * Cname) { // 전화번호 삭제함수
+	Store * tmp1 = *store;Store * tmp2 = *store;
+	if (*store == EMPTY) printf("<System> : 삭제 대상이 더 이상 존재하지 않습니다.\n");
+	else if (!strcmp((*tmp1).Ccall, Cname)) {
+		*store = (*tmp1).linkC;free(tmp1);
+	}
+	else cdel(&(*store)->linkC, Cname);	
+}
+//=============================================================================
+//=============================================================================
+typedef struct node { //점수 구조체
+	int score;int grade;
+	struct node * link;//다음 구조체랑 연결시키기 위해서 link
+}ScoreList;
+void list(ScoreList ** score) { //기록 리스트
+	ScoreList * tmp = *score;
+	while (tmp != EMPTY) {
+		printf("%d번째 : %d점\n", (*tmp).grade, (*tmp).score);
+		tmp = (*tmp).link;
+	}
+	if (tmp == EMPTY) printf("<System> : 기록이 존재하지 않습니다.\n");
+}
+//=============================================================================
+ScoreList * getnode() { //점수 기록 만들때 공간할당
+	ScoreList * tmp = (ScoreList*)malloc(sizeof(ScoreList));tmp->link = EMPTY;
+	return tmp;
+}
+//=============================================================================
+void add(ScoreList ** score, int point, int scoreGrade) { // 기록 추가 함수
+	if (*score == EMPTY) {
+		*score = getnode();
+		(**score).score = point;
+		(**score).grade = scoreGrade;
+		return;
+	}
+	add(&(*score)->link, point, scoreGrade);
+}
+//=============================================================================
+int main() {
+	Store * store = EMPTY;
+	ScoreList * score = EMPTY;
+	srand((unsigned int)time(NULL));
+	int scoreGrade = 1;
+	int select;
+	char name[100];
+	char Aname[100];
+	char text[1000];
+	int run = 1;
+	int runIn = 1;
+	int selectGame;
+	int mineArr[7][7];
+	char Cname[30];
+	//---------------명령어 목록------------------------
+	char * cc1 = { "날씨" };
+	char * cc2 = { "이름" };
+	char * cc5 = { "ㅎㅇ" };
+	char * cc6 = { "안녕" };
+	char * cc7 = { "안녕하세요" };
+	char * cc8 = { "hi" };
+	char * cc9 = { "hello" };
+	char * cc10 = { "청소" };
+	char * cc12 = { "종료" };
+	char * cc13 = { "뒤로가기" };
+	char * cc14 = { "심심" };
+	char * cc15 = { "게임" };
+	char * cc16 = { "yes" };
+	char * cc17 = { "놀아줘" };
+	char * cc18 = { "뉴스" };
+	char * cc19 = { "?" };
+	char * cc20 = { "연락처" };
+	char * cc21 = { "전화번호" };
+	//--------------------------------------------------
+	int randomSelectIn = (rand() % 3) + 1; // random : 1~3
+	system("color CE");// => 색변경 (연빨 / 연노)
+	printf("┌- - - - - - - - - - - - - - - - - - - - - - - - - - - - -┐\n");
+	printf("ㅣ						       	  ㅣ\n");
+	printf("ㅣ							  ㅣ \n");
+	printf("ㅣ			프로필 설정			  ㅣ\n");
+	printf("ㅣ							  ㅣ\n");
+	printf("ㅣ							  ㅣ\n");
+	printf("└- - - - - - - - - - - - - - - - - - - - - - - - - - - - -┘\n");
+	printf("환영합니다 주인님!\n주인님의 성함은 어떻게 되시나요??\n");
+	printf("입력 >>"); scanf("%s", name);
+	printf("주인님! 저의 이름은 무엇인가요?\n");
+	printf("입력 >>");
+	scanf("%s", Aname);
+	printf("감사합니다!");
+	system("pause");
+	system("cls");
+	system("color B1");// => 색변경
+	while (run) {
+		int randomSelect = (rand() % 3) + 1; // random : 1~3
+		//아이콘
+		printf("%s :안녕하세요 주인님!\n지금 뭘 하실건가요?\n", Aname);
+		printf("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =\n");
+		printf("1. %s야 || 2.잠을 잘래 || 3. 공부 할거야 || 4. 다른 작업을 할거야 || 5. 나이제 갈래~\n", Aname);
+		printf("= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =\n");
+		printf("선택 해 주세요 >>"); scanf("%d", &select);
+		switch (select) {
+		case 1:
+			runIn = 1;
+			while (runIn) {
+				//아이콘 
+				printf("%s : 무엇을 원하시나요??\n", Aname);
+				printf("=> ?를 입력 하시면 명령어를 확인할 수 있어요.\n");
+				printf("<%s> : ", name);
+				scanf("%s", text);
+				printf("조금만 기다려주세요!\n");
+				Sleep(3000);
+				if (strstr(text, cc1)) {
+					int randomWeather = (rand() % 8) + 1; // random : 1~8
+					switch (randomWeather) {
+					case 1:
+						printf("%s :오늘의 날씨는 꽤 더울수 있습니다!얇게 입고 나가면 좋을거 같아요!\n", Aname);
+						break;
+					case 2:
+						printf("%s :오늘의 날씨는 좀 쌀쌀할거 같습니다! 겉 옷을 들고가는게 좋을거 같아요!\n", Aname);
+						break;
+					case 3:
+						printf("%s :오늘은 아침과 밤엔 춥고 낮은 따뜻한 봄일거 같네요!\n", Aname);
+						break;
+					case 4:
+						printf("%s :독서의 계절이 온거 같아요! 물 한 병 들고 다니는게 건강에 좋을거 같아요!\n", Aname);
+						break;
+					case 5:
+						printf("%s :오늘은 낮엔 비가 오고 저녁엔 좀 더울 거 같아요. 우산은 들고 다니는게 좋을거 같네요!\n", Aname);
+						break;
+					case 6:
+						printf("%s :오늘은 하루 종일 더울거 같아요 물 한 병들고 다니시는게 어떨까요?\n", Aname);
+						break;
+					case 7:
+						printf("%s :저녁에만 다소 쌀쌀할수 있어요! 감기 조심하세요~^^\n", Aname);
+						break;
+					case 8:
+						printf("%s :방에서 코딩만 하시다가는 더워서 쓰러질 수 있어요! 몸 챙기세요!\n", Aname);
+						break;
+					}
+				}
+				//------------------------------------------------------------------------------------------------------
+				else if (strstr(text, cc19)) {
+					printf("날씨 => 날씨를 알려줌\n");
+					printf("이름 => 인공지능 이름 호출\n");
+					printf("안녕 => 인공지능과 인사\n");
+					printf("청소 => 기록 삭제\n");
+					printf("뒤로가기 => 전에 있던 창으로 이동\n");
+					printf("게임, 놀아줘 => 게임실행\n");
+					printf("연락처, 전화번호 => 전화번호부로 이동\n");
+					printf("\n");
+				}
+				//-------------------------------------------------------------------------------------------------------
+				else if (strstr(text, cc20) || strstr(text, cc21)) {
+					int cRun = 1;
+					int selectC;
+					while (cRun) {
+						system("pause");
+						system("cls");
+						system("color 3F");
+						printf("┌= = = = = = = = = = = = = = = = = = = = =┐\n");
+						printf("|                Call                      |\n");
+						printf("└= = = = = = = = = = = = = = = = = = = = =┘\n");
+						printf("[1] 전화 걸기\n");
+						printf("[2] 연락처 추가\n");
+						printf("[3] 연락처 목록\n");
+						printf("[4] 연락처 삭제\n");
+						printf("[5] 뒤로가기\n");
+						printf("입력 >>");
+						scanf("%d", &selectC);
+						switch (selectC) {
+						case 1:
+							printf("전화번호부에서는 전화를 할 수 없습니다.\n");
+							break;
+						case 2:
+							addC(&store);
+							break;
+						case 3:
+							listC(&store);
+							break;
+						case 4:
+							printf("삭제할 전화번호 입력 >>");//전화번호 or 이름
+							scanf("%s", Cname);
+							cdel(&store, Cname);
+							break;
+						case 5:
+							cRun = 0;
+							Sleep(1000);
+							system("cls");
+							system("color B1");
+							break;
+						}
+					}
+				}
+				//-------------------------------------------------------------------------------------------------------
+				else if (strstr(text, cc2)) {
+					randomSelect = (rand() % 4) + 1; // random : 1~3
+					switch (randomSelect) {
+					case 1:
+						printf("%s : 제 이름은 [%s] 입니다! 기억해주셨으면 좋겠습니다!\n", Aname, Aname);
+						break;
+					case 2:
+						printf("%s : 제이름은 [%s] 입니다! 예쁜 이름이죠??\n", Aname, Aname);
+						break;
+					case 3:
+						printf("%s : 제이름은 [%s] 입니다! 누가 지어줬는지 예쁜이름 같습니다,\n", Aname, Aname);
+						break;
+					default:
+						printf("%s : 제이름은 [%s] 입니다!\n", Aname, Aname);
+						break;
+					}
+				}
+				//------------------------------------------------------------------------------------------------------------
+				/*else if (strstr(text, cc3) || strstr(text, cc4)) {
+					randomSelect = (rand() % 2) + 1; // random : 1~2
+					switch (randomSelect) {
+					case 1:
+						printf("바른 말만 사용해주셨으면 좋겠습니다.\n");
+						break;
+					case 2:
+						printf("예쁜 말만 사용해 주시겠습니까? %s님 ^^...\n", name);
+						break;
+					}
+				}
+				*/
+				//----------------------------------------------------------------------------------------------------------
+				else if (strstr(text, cc10)) {
+					printf("청소를 시작합니다!\n");
+					Sleep(5000);
+					system("cls");
+					printf("청소 끝!\n");
+				}
+				//----------------------------------------------------------------------------------------------------------
+				else if (strstr(text, cc18)) {
+					system("cls");
+					int newsRun = 1;
+					while (newsRun) {
+						int newsSelect;
+						printf("┌= = = = = = = = = = = = = = = = = = = = =┐\n");
+						printf("|                News                      |\n");
+						printf("└= = = = = = = = = = = = = = = = = = = = =┘\n");
+						printf("┌- - - - - - - - - - - - - - - - - - - - - - - - - - - - -┐\n\n");
+						printf("[1] <속보> : 학교브랜드의 우산을 나눠 주는 학교가 있다?\n");
+						printf("[2] <이슈> : 5G와 버금가는 와이파이...?\n");
+						printf("[3] <분석> : 요즘 뜨는 기술? 인공지는 AI 스피커!\n");
+						printf("[4] <기사> : 세계 최고 딥러닝 학회서 AI연구성과 공개\n");
+						printf("[5] <뒤로가기>\n");
+						printf("└- - - - - - - - - - - - - - - - - - - - - - - - - - - - -┘\n");
+						printf("입력 >>");
+						scanf("%d", &newsSelect);
+						switch (newsSelect) {
+						case 1:
+							printf("==< 속보 >==\n\n");
+							printf("학교브랜드의 우산을 나눠 주는 학교가 있다?\n");
+							printf("오랜 기다림 끝에 금정 우산 제작되었고 곧 금정 우산이 시행 될 예정이라는 속보가 접수되었습니다.\n");
+							printf("저번주에 우산 물량확인과 각종 문서화 작업이 마무리 되었고 찾아오는 월요일에 전교생이 받는다고 합니다. \n");
+							printf("금정고등학교는 화이팅!! \n");
+							break;
+						case 2:
+							printf("==< 이슈 >==\n\n");
+							printf("5G와 버금가는 와이파이...?");
+							printf("차세대 기술 와이파이7, 얼마나 빨라졌을까.\n\n");
+							printf("7세대 와이파이는 5G 이동통신에 버금가는 무선랜 기술 진화 결정판이다. 5G 활성화에 발맞춰 개발될 예정인 초실감\n");
+							printf("미디어 콘텐츠를 안정적으로 전송하는 등 4차 산업혁명을 앞당기는 차세대 기술로 주목 받고있다.\n");
+							break;
+						case 3:
+							printf("==< 기사 >==\n\n");
+							printf("세계 최고 딥러닝 학회서 AI연구성과 공개\n\n");
+							printf("대화 중, 대화 맥락이 끊기고 특정 문장이 반복해 나오는 문제를 해결하기 위해\n");
+							printf("대화 맥락을 이해하고 반응을 다양화하며 새로운 대화 생성 모델을 구축하는 기술을 담았다.\n\n");
+							printf("해를 거듭하며 네이버 클로바의 AI 기술력에 대한 해외 학회에서의 주목도가 더욱 높아지고 있다\n\n");
+							printf("현장에선 클로바(Clova)가 더욱 똑똑한 AI 비서가 되는데 핵심적인 기술에 대한 네이버의 2개 논문이 많은 주목을 받았다.\n");
+							break;
+						case 4:
+							printf("==< 분석 >==\n\n");
+							printf("요즘 뜨는 기술?\n 인공지는 AI 스피커!\n\n");
+							printf("1. 일단 배터리 자체가 없어서 화면에 LED를 통해 배터리 잔량을 확인가능하며 배터리 양을 물어볼 수 있다.\n");
+							printf("2. 인공지능은 사용했던 지식들을 누적하기 때문에 결국 시간이 지날 수록 더욱더 똑똑해진다.\n");
+							printf("3. 다른 서비스와 협엽해 우리 집을 스마트 홈으로 탈 바꿈할 수도 있다.\n");
+							break;
+						case 5:
+							newsRun = 0;
+							break;
+						}
+						system("pause");
+						system("cls");
+					}
+				}
+				//----------------------------------------------------------------------------------------------------------------------
+				else if (strstr(text, cc5) || strstr(text, cc6) || strstr(text, cc7) || strstr(text, cc8)) {
+					randomSelect = (rand() % 8) + 1; // random : 1~8
+					switch (randomSelect) {
+					case 1:
+						printf("안녕하세요 주인님!\n");
+						break;
+					case 2:
+						printf("저도 반가워요 주인님!!\n");
+						break;
+					case 3:
+						printf("보고싶었습니다 주인님!!\n");
+						break;
+					case 4:
+						printf(" Hello My Host!!!!\n");
+						break;
+					case 5:
+						printf("Hi!\n");
+					case 6:
+						printf("어서오세요 주인님!\n");
+						break;
+					case 7:
+						printf("반갑습니다 주인님!^^\n");
+						break;
+					case 8:
+						printf("안녕!!!!!\n");
+						break;
+					}
+				}
+				//-----------------------------------------------------------------------------------------------------------------------------
+				/*else if (strstr(text, cc11) || strstr(text, cc12) || strstr(text, cc13)) {
+					runIn = 0;
+				}*/
+				//-----------------------------------------------------------------------------------------------------------------------------
+				else if (strstr(text, cc14) || strstr(text, cc15) || strstr(text, cc17)) {
+					int runGame = 1;
+					system("cls");
+					while (runGame) {
+						printf("==============================<<Game Menu>>==================================\n");
+						printf("1. 업다운 게임 : 랜덤으로 배정된 수를 맞춰야되는 게임!\n");
+						printf("2. 지뢰 찾기 게임 : 7x7 게임 판에서 난이도별로 지뢰를 피해 좌표를 입력하는 게임!\n");
+						printf("3. 심리전 게임 : 상대와 나는 랜덤으로 수가 부여됬는데 바꿀 기회가 1번 존재한다.\n");
+						printf("4. 지뢰 찾기 게임 기록\n");
+						printf("5. BaseBall 게임\n");
+						printf("6. 뒤로가기\n");
+						printf("=============================================================================\n");
+						printf("\n\n");
+						printf("입력 >>"); scanf("%d", &selectGame);
+
+						switch (selectGame) {
+						case 1:
+							printf("게임 접수 완료!\n시작하기 전에 준비~\n");
+							Sleep(3000);
+							printf("==============================<<Game Menu>>==================================\n");
+							printf("			UP		DOWN	 GAME\n");
+							printf("=============================================================================\n");
+							int randomGame = (rand() % 100) + 1;
+							int upDownGame;
+							int upDownCount = 0;
+							int upRun = 1;
+							while (upRun) {
+								upDownCount++;
+								printf("<Up Down Game> 입력 : "); scanf("%d", &upDownGame);
+								if (upDownGame > randomGame) {
+									printf("Down!\n");
+								}
+								else if (upDownGame < randomGame) {
+									printf("Up!\n");
+								}
+								else {
+									printf("%d회만에 성공!!!!!\n", upDownCount);
+									upRun = 0;
+								}
+							}
+							break;
+						case 2:
+							for (int i = 1; i < 8; i++) {
+								for (int j = 1; j < 8; j++) {
+									mineArr[i][j] = 'O';
+								}
+							}
+							printf("게임 접수 완료!\n시작하기 전에 준비~\n");
+							Sleep(3000);
+							printf("==============================<<Game Menu>>==================================\n");
+							printf("				지뢰 찾기!\n");
+							printf("=============================================================================\n");
+							printf("게임 설명 : x,y좌표를 엔터키나 스페이스로 구분해서 입력해, 지뢰를 피해서 지뢰가 아닌 땅을 찾는게 목표!\n");
+							printf("\n\n");
+							int mineXCount = 0;
+							int mineYCount = 0;
+							int mineCount = 0;
+							int mineGameX, mineGameY;
+							int mineRandomX = (rand() % 7) + 1;
+							int mineRandomY = (rand() % 7) + 1;
+							int mineRun = 1;
+							while (mineRun) {
+								for (int i = 1; i < 8; i++) {
+									for (int j = 1; j < 8; j++) {
+										printf("%c ", mineArr[i][j]);
+									}
+									printf("\n");
+								}
+								printf("\n\n");
+								printf("<주의사항> => x와 y좌표는 1~7 사이를 넣어주세요!\n"); // 중복 검사 & 범위 밖에 못나가게 하기
+								printf("<지뢰찾기> 입력 : "); scanf("%d %d", &mineGameX, &mineGameY);
+								if (mineGameX > 7 || mineGameY > 7) printf("1~7사이만 입력 해주세요!!\n");
+								else if (mineGameX < 1 || mineGameY < 1) printf("1~7사이만 입력 해주세요!!\n");
+								mineArr[mineGameY][mineGameX] = 'X';system("pause");system("cls");
+								if (mineCount < 50) {
+									if (mineGameX == mineRandomX && mineGameY == mineRandomY) {
+										system("color 40");// => 색변경x
+										printf("===========================<<Game Menu>>============================\n");
+										printf("펑!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+										printf("====================================================================\n");
+										add(&score, mineCount, scoreGrade++);
+										printf("기록이 입력되었습니다. 기록을 확인하실려면 게임메뉴로 가주세요!\n");mineRun = 0;Sleep(3000);
+									}
+									else mineCount++;
+								}
+								else if (mineCount == 49) {
+									printf("!!!!!!!Perfect!!!!!!\n");
+									add(&score, mineCount, scoreGrade++);
+									mineRun = 0;system("pause");system("cls");
+								}
+							}
+							break;
+						case 3:
+							printf("게임 접수 완료!\n시작하기 전에 준비~\n"); //정상실행 될때가 잇고 안될때가 잇음 -> 해결바람 => 해결완료
+							Sleep(3000);
+							printf("==============================<<Game Menu>>==================================\n");
+							printf("			고 난이도 심리게임\n");
+							printf("=============================================================================\n");
+							printf("<간단한 Tip 설명> : 상대에게 1~10사이에 카드가 부여되고 나에게도 1~10이 부여된다.\n");
+							printf("그럼 같거나 다른데 바꿀 기회는 1번!\n");
+							int changeCard1 = ((rand() % 10) + 1);
+							int changeCard2 = ((rand() % 10) + 1);
+							char changeText[10];
+							Sleep(4000);
+							printf("당신의 카드의 숫자는 [%d] 입니다...\n\n", changeCard1);
+							int randomSelectChange = rand() % 5 + 1;
+							int changeCard3 = ((rand() % 10) + 1);
+							switch (randomSelectChange) {
+							case 1:
+								printf("<System> : 믿든 말든 당신 상관이지만 저는 '%d'을 가지고 있습니다.\n", changeCard3);
+								printf("<System> : 도움은 안되겠지만 <System>은 40퍼센트의 확률로 거짓말을 치고 있습니다.\n");
+								break;
+							case 2:
+								printf("<System> : 이 게임이 첫 번째라면 나는 '5'를 가지고 있을 겁니다.\n");
+								printf("<System> : 도움은 안되겠지만 <System>은 40퍼센트의 확률로 거짓말을 치고 있습니다.\n");
+								break;
+							case 3:
+								printf("<System> : 당신은 날 이길 수 없습니다.\n");
+								printf("<System> : 도움은 안되겠지만 <System>은 40퍼센트의 확률로 거짓말을 치고 있습니다.\n");
+								break;
+							case 4:
+								printf("<System> : 믿든 말든 당신 상관이지만 저는 '%d'를 가지고 있습니다.\n", changeCard2);
+								printf("<System> : 도움은 안되겠지만 <System>은 40퍼센트의 확률로 거짓말을 치고 있습니다.\n");
+								break;
+							case 5:
+								printf("<System> : 이 게임이 첫 번째라면 나는 '%d'를 가지고 있을 겁니다.\n", changeCard3);
+								printf("<System> : 도움은 안되겠지만 <System>은 40%의 확률로 거짓말을 치고 있습니다.\n");
+								break;
+							}
+							printf("생각할 시간을 드리겠습니다.\n");
+							Sleep(5000);
+							system("pause");
+							printf("카드를 교환 하시겠습니까? [yes / no]\n");//난 card2 상대는 card1
+							scanf("%s", changeText);
+							if (strstr(changeText, cc16)) {
+								int tmp2 = changeCard1;
+								changeCard1 = changeCard2;
+								changeCard2 = tmp2;
+								printf("카드는 바뀌었습니다...\n");
+								Sleep(3000);
+								printf("결과를 확인하십시오\n");
+								Sleep(3000);
+								if (changeCard1 < changeCard2) {
+									printf("당신의 패배입니다\n");
+									printf("상대의 결과를 확인하십시오.\n");
+									Sleep(3000);
+									printf("<처음 상대 카드> : %d\n", changeCard1);
+								}
+								else if (changeCard1 > changeCard2) {
+									printf("당신의 승리입니다\n");
+									printf("상대의 결과를 확인하십시오.\n");
+									Sleep(3000);
+									printf("<처음 상대 카드> : %d\n", changeCard1);
+								}
+								else {
+									printf("무승부 입니다\n");
+								}
+							}
+							else {
+								printf("카드를 그대로 두었습니다...\n");
+								Sleep(3000);
+								printf("결과를 확인하십시오\n");
+								Sleep(3000);
+								if (changeCard1 < changeCard2) {
+									printf("당신의 패배입니다\n");
+									printf("상대의 결과를 확인하십시오.\n");
+									Sleep(3000);
+									printf("<상대> : %d\n", changeCard2);
+								}
+								else if (changeCard1 > changeCard2) {
+									printf("당신의 승리입니다\n");
+									printf("상대의 결과를 확인하십시오.\n");
+									Sleep(3000);
+									printf("<상대> : %d\n", changeCard2);
+								}
+								else {
+									printf("무승부 입니다\n");
+								}
+							}
+							break;
+						case 4:
+							list(&score);
+						case 5:
+							printf("오류 수정 중\n");
+							//printf("\n\n");
+							//printf("게임 접수 완료!\n시작하기 전에 준비~\n");
+							//Sleep(3000);
+							//printf("==============================<<Game Menu>>==================================\n");
+							//printf("			Baseball Game\n");
+							//printf("=============================================================================\n");
+							//printf("※ 3자리의 랜덤한 숫자를 생성한 후에 사용자에게 반복하여 입력을 받는다\n");
+							//printf("※ 자리수가 일치하면서 값도 일치하면 Strike\n");
+							//printf("※ 자리수는 일치하지 않으나, 값만 일치하면 Ball\n");
+							//printf("※ 3 Strike가 나올때 까지 반복하여 입력을 받고 정답을 맞추면 공개 후 재시작 여부를 물어봅니다\n");
+							//int runBaseball = 1;
+							//int tmpBaseball = 0;
+							//int arrbaseball[3];
+							//tmpBaseball = (rand() % 900) + 100; //100~999
+							//arrbaseball[2] = tmpBaseball % 10;//3자리수
+							//arrbaseball[1] = (tmpBaseball % 100) / 10;//2자리수
+							//arrbaseball[0] = (tmpBaseball / 100);//1자리수
+							//int digit = 100;
+							//int answerBaseball = 0;
+							//for (int i = 0; i < 3; i++) {
+							//	answerBaseball += arrbaseball[i] * digit;
+							//	digit /= 10;
+							//}
+							//int arrscan[3];
+							//int strike = 0;
+							//int ball = 0;
+							//int scanBaseball;
+							//while (runBaseball) {
+							//	printf("<3자리수 입력> : ");
+							//	scanf("%d", &scanBaseball);
+							//	if (scanBaseball == 0) {
+							//		printf("정답 : %d\n", answerBaseball);
+							//	}
+							//	arrscan[2] = scanBaseball % 10;//3번째 자리
+							//	arrscan[1] = scanBaseball % 100 / 10;//2번째 자리
+							//	arrscan[0] = scanBaseball / 100; //1번째 자리
+							//	for (int i = 0; i < 3; i++) {
+							//		for (int j = 0; j < 3; j++) {
+							//			if ((arrbaseball[i] == arrscan[j]) && (i == j)) {	// 숫자, 자리 같으면 673 -> 333입력 (오류)
+							//				strike++;
+							//			}
+							//			else if ((arrbaseball[i] == arrscan[j]) && (i != j)) {	// 숫자 같고, 자리 다르면
+							//				ball++;
+							//			}
+							//		}
+							//	}
+							//	if (strike == 3) {
+							//		printf("3 Strike 게임 종료!\n");
+							//		runBaseball = 0;
+							//		system("pause");
+							//		system("cls");
+							//	}
+							//	else
+							//		printf("%d Strike || %d Ball\n", strike, ball);
+							//	strike = 0;
+							//	ball = 0;
+							//}
+							//break;
+						case 6:
+							runGame = 0;
+							break;
+						}
+					}
+				}
+				//----------------------------------------------------------------------------------------------------------
+			}
+			break;
+		case 2:
+			printf("안녕히 주무세요 !\n저는 주인님이 오실때 까지 기다리고있겠습니다.\n");
+			break;
+		case 3:
+			if (randomSelect == 1) {
+				printf("열심히 공부하세요 주인님!\n 저는 주인님 뒤에서 늘 응원하고 있답니다.\n");
+				break;
+			}
+			else if (randomSelect == 2) {
+				printf("주인님은 꼭 성공하실 겁니다!\n제가 늘 응원하고있기 때문이죠!\n");
+				break;
+			}
+			else if (randomSelect == 3) {
+				printf("주인님은 늘 성실하셔서 언젠간 꼭 성공하실 겁니다!\n");
+				break;
+			}
+			else {
+				printf("주인님의 성공을 기원합니다!\n");
+				break;
+			}
+		case 4:
+			if (randomSelect == 1) {
+				printf("주인님은 늘 열심히하셔서 뭐든 하면 잘 될겁니다!\n");
+				break;
+			}
+			else if (randomSelect == 2) {
+				printf("꼭 잘되길 빌겠습니다 주인님!\n그렇다고 저에게 무관심하면 섭섭할거 같습니다...\n");
+				break;
+			}
+			else if (randomSelect == 3) {
+				printf("열심히 하세요 주인님!\n필요하시다면 언제든지 불러주시면 도와드리겠습니다!\n");
+				break;
+			}
+			else {
+				printf("전 항상 주인님을 뒤에서 응원하고 있습니다!\n");
+				break;
+			}
+		case 5:
+			printf("안녕히 가세요 주인님!\n오늘 하루도 행복하길 응원하겠습니다!\n");
+			run = 0;
+			break;
+		}
+		system("pause");
+		system("cls");
+	}
+
+}

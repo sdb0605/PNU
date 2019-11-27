@@ -1,0 +1,256 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#define EMPTY 0
+//===============================================================
+//문자열은 대입할때 strcpy(복사할문자열, 원본문자열)
+//문자열을 비교할때 if(!strcmp(비교문자열1,비교문자열))
+//strmp는 똑같으면 0(false)을 반환 -> !표로 1(true)로 바꿔줘요
+//문자열 비교할때는 strcmp를 사용한다!!!
+//===============================================================
+typedef struct node {
+	char name[20];
+	char address[20];
+	int age;
+	int kor;
+	int math;
+	int eng;
+	struct node * link;
+}Linklist;
+//===============================================================
+Linklist * get_node() {
+	Linklist * tmp = (Linklist*)malloc(sizeof(Linklist));
+	tmp->link = EMPTY;
+	return tmp;
+}
+//===============================================================
+void enroll(Linklist ** head) {
+	if (*head == EMPTY) {
+		*head = get_node();
+		char name[20];
+		char address[20];
+
+		printf("★★이름을 입력해주세요★★ : ");
+		scanf("%s", name);
+		strcpy((*head)->name, name);
+
+		printf("나이를 입력해주세요 : ");
+		scanf("%d", &(**head).age);
+
+		printf("주소를 입력해주세요 : ");
+		scanf("%s", address);
+		strcpy((*head)->address, address);
+
+		printf("국어점수를 입력해주세요 : ");
+		scanf("%d", &(**head).kor);
+
+		printf("영어점수를 입력해주세요 : ");
+		scanf("%d", &(**head).eng);
+
+		printf("수학점수를 입력해주세요 : ");
+		scanf("%d", &(**head).math);
+		return;
+	} 
+	enroll(&(*head)->link);
+}
+//===============================================================
+void search(Linklist ** head, char sname[20]) {
+	int year = rand() % 3 + 1;//1 ~ 3사이의 임의의 수 반환
+	int Mclass = rand() % 10 + 1;//1 ~ 10사이의 임의의 수 반환
+	if (*head == EMPTY) {
+		printf("찾으시는 학생이 등록 되있는 학생이 아닙니다.\n");
+	}
+	else if (!strcmp((**head).name, sname)) {
+		double avg = ((**head).math + (**head).eng + (**head).kor) / 3;
+		printf("★★★★검색완료 ! ★★★★\n");
+		printf("★★★★[%s]님의 정보★★★★\n", (**head).name);
+		printf("[%s]님의 나이 : %d\n", (**head).name, (**head).age);
+		printf("[%s]님의 주소 : %s\n", (**head).name, (**head).address);
+		printf("[%s]님의 학년 / 반 : %d학년 %d반\n", (**head).name, year, Mclass);
+		printf("[%s]님의 국어성적 : %d\n", (**head).name, (**head).kor);
+		printf("[%s]님의 영어성적 : %d\n", (**head).name, (**head).eng);
+		printf("[%s]님의 수학성적 : %d\n", (**head).name, (**head).math);
+		printf("[%s]님의 합계점수 : %d\n", (**head).name, (**head).math + (**head).eng + (**head).kor);
+		printf("[%s]님의 평균 : %.2lf\n", (**head).name, avg);
+		if (avg >= 90) {
+			printf("[%s]님의 등급 : A\n", (**head).name);
+		}
+		else if (90 > avg && avg >= 80) {
+			printf("[%s]님의 등급 : B\n", (**head).name);
+		}
+		else if (80 > avg && avg >= 70) {
+			printf("[%s]님의 등급 : C\n", (**head).name);
+		}
+		else if (70 > avg && avg >= 60) {
+			printf("[%s]님의 등급 : D\n", (**head).name);
+		}
+		else if (60 > avg && avg >= 50) {
+			printf("[%s]님의 등급 : E\n", (**head).name);
+		}
+		else if (50 > avg) {
+			printf("[%s]님의 등급 : F\n", (**head).name);
+		}
+	}
+	else {
+		search(&(*head)->link, sname);
+	}
+}
+//===============================================================
+void list(Linklist ** head) {
+	Linklist * tmp = *head;
+	int year = rand() % 3 + 1;//1 ~ 3사이의 임의의 수 반환
+	int Mclass = rand() % 10 + 1;//1 ~ 10사이의 임의의 수 반환
+	while (tmp != EMPTY) {
+		printf("[%d학년 %d반] -> [%d]세 -> [%s]님\n", year, Mclass, (*tmp).age, (*tmp).name);
+		tmp = (*tmp).link;
+	}
+	if (tmp == EMPTY) {
+		printf("\n\n");
+		printf("<=============[NOTICE]=============>\n");
+		printf("더 이상 학생이 존재하지 않습니다.\n");
+		printf("<==================================>\n");
+		printf("\n\n");
+	}
+}
+//===============================================================
+void modify(Linklist ** head, char * mname) {
+	int num = 1;
+	int menu2;
+	char name[20];
+	char address[20];
+	if (*head == EMPTY) {
+		printf("수정 대상 학생이 존재하지 않습니다.\n");
+	}
+	else if (!strcmp((**head).name, mname) == 1) {
+		printf("★★★★검색완료 ! ★★★★\n");
+		printf("★★★★어느 항목을 수정하시겠습니까★★★★\n");
+		while (num) {
+			search(head, (*head)->name);
+			printf("\n");
+			printf("★★★★수정할 항목★★★★\n");
+			printf("1.학생 이름\n");
+			printf("2.학생 나이\n");
+			printf("3.학생 주소 \n");
+			printf("4.학생 점수 \n");
+			printf("5.종료 \n\n");
+			printf("★★★★★★★★★★★★★\n");
+			printf("항목 : ");
+			scanf("%d", &menu2);
+			//=====================================================
+			switch (menu2) {
+			case 1:
+				printf("기존 이름 : %s\n", (**head).name);
+				printf("바꿀 이름 : ");
+				scanf("%s", name);
+				strcpy((*head)->name, name);
+				printf("★★변경완료!★★\n");
+				break;
+			case 2:
+				printf("기존 나이 : %d\n", (**head).age);
+				printf("바꿀 나이 : ");
+				scanf("%d", &(**head).age);
+				printf("★★변경완료!★★\n");
+				break;
+			case 3:
+				printf("기존 주소 : %s\n", (**head).address);
+				printf("바꿀 주소 :");
+				scanf("%s", address);
+				strcpy((**head).address, address);
+				printf("★★변경완료!★★\n");
+				break;
+			case 4:
+				printf("기존 국어성적 : %d\n", (**head).kor);
+				printf("기존 영어성적 : %d\n", (**head).eng);
+				printf("기존 수학성적 : %d\n", (**head).math);
+
+				printf("변경할 국어 점수 : ");
+				scanf("%d", &(**head).kor);
+				printf("변경할 영어 점수 : ");
+				scanf("%d", &(**head).eng);
+				printf("변경할 수학 점수 : ");
+				scanf("%d", &(**head).math);
+				printf("★★변경완료!★★\n");
+				break;
+			case 5:
+				num = 0;
+				break;
+			}
+			system("pause");
+			system("cls");
+		}
+		printf("★★★★수정완료!★★★★\n");
+	}
+	else {
+		modify(&(*head)->link, mname);
+	}
+}
+//===============================================================
+void del(Linklist ** head, char * dname) {
+	Linklist * tmp = *head;
+	if (*head == EMPTY) {
+		printf("삭제 대상 학생이 존재하지 않습니다.\n");
+	}
+	else if (!strcmp((*tmp).name, dname)) {
+		*head = (*tmp).link;
+		free(tmp);
+		printf("★★★★삭제완료!★★★★\n");
+	}
+	else {
+		del(&(*head)->link, dname);
+	}
+}
+//===============================================================
+int main() {
+	Linklist * head = EMPTY;
+	int menu;
+	char sname[20], dname[20], mname[20];
+	while (1) {
+		printf("< < < = = = = 메뉴 = = = = > > > \n\n");
+		printf("1.	학생 등록\n");
+		printf("2.	학생 검색\n");
+		printf("3.	학생 목록 \n");
+		printf("4.	학생 수정 \n");
+		printf("5.	학생 삭제\n");
+		printf("6.	종료 \n\n");
+		printf("< < < = = = = = = = = = = = > > > \n\n");
+		printf("선택 : ");
+		scanf("%d", &menu);
+		system("cls");
+		switch (menu)
+		{
+		case 1:
+			enroll(&head);
+			break;
+		case 2:
+			printf("< < = = = = = information = = = = = > >\n");
+			printf("검색할 이름 입력 : ");
+			scanf("%s", sname);
+			printf("학생 정보 검색 완료\n");
+			search(&head, sname);
+			break;
+		case 3:
+			list(&head);
+			break;
+		case 4:
+			printf("수정할 학생의 이름은? : ");
+			scanf("%s", mname);
+			modify(&head, mname);
+			break;
+		case 5:
+			printf("삭제할 이름을 입력하세요 : ");
+			scanf("%s", dname);
+			del(&head, dname);
+			break;
+		case 6:
+			printf("학생관리 프로그램을 종료합니다\n");
+			exit(0);
+			break;
+		default:
+			printf("잘못된 번호를 입력하셨습니다\n");
+			system("pause");
+			system("cls");
+			break;
+		}
+	}
+}

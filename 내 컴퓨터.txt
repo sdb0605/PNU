@@ -1,0 +1,433 @@
+#include<iostream>
+#include<stdio.h>
+#include<stdlib.h>
+#include<vector>
+#include<string>
+#include "Console.h"
+#include<time.h>
+using namespace std;
+class Student {//학생 클래스를 만들어서 편리하게 관리하기
+public:
+	string name;
+	int age;
+	int grade;//학년
+	int gradeClass;//반
+	string gender;//성별
+	int kor;
+	int math;
+	int eng;
+public:
+	Student(string name, int age, int grade, int gradeClass, 
+		string gender, int kor, int math, int eng) {
+		this->name = name;
+		this->age = age;
+		this->grade = grade;
+		this->gradeClass = gradeClass;
+		this->gender = gender;
+		this->kor = kor;
+		this->math = math;
+		this->eng = eng;
+	}
+	string getName() {
+		return name;
+	}
+	void showInfo() {
+		cout << "==<<" << name << ">>==" << endl;
+		cout << "이름 : " << name << endl;
+		cout << "나이 : " << age << endl;
+		cout << "학년 : " << grade << endl;
+		cout << "반 : " << gradeClass << endl;
+		cout << "국어 점수 : " << kor << endl;
+		cout << "수학 점수 : " << math << endl;
+		cout << "영어 점수 : " << eng << endl;
+	}
+};
+class Employee {//미리 만들어 놓을 직원 객체
+protected:
+	string name;
+public:
+	Employee(string name) :name(name) {};
+	virtual void showInfo() {
+		cout << "----[profile]----" << endl;
+		cout << "이름 : " << name << endl;
+	}
+};
+class Permanent : public Employee {
+private:
+	int money;string grade;
+public:
+	Permanent(string name, int money, string grade) 
+		:Employee(name), money(money), grade(grade) {};
+	void virtual showInfo() {
+		Employee::showInfo();
+		cout << "월급 : " << money << endl;
+		cout << "직위 : " << grade << endl;
+	}
+};
+class Temporary : public Employee {
+private:
+	int money;int time;int contract;
+public:
+	Temporary(string name, int money, int time, int contract) 
+		:Employee(name), money(money), time(time), contract(contract) {};
+	void virtual showInfo() {
+		Employee::showInfo();
+		cout << "계약 기간 : " << contract << endl;
+		cout << "시급 : " << money << endl;
+		cout << "하루 일 할 시간 : " << time << endl;
+		cout << "오늘 시급 : " << time * money << endl;
+	}
+};
+/*
+<<대학 입시용 컴퓨터>>
+*/
+void enroll(vector <Student> * s,string name,int age,int grade,
+	int gradeClass,string gender,int kor,int math,int eng) {
+	(*s).push_back(Student(name, age, grade, gradeClass, gender, kor, math, eng));
+}
+void print_all(vector<Student> * s) {
+	for (auto & i : *s) {
+		i.showInfo();
+	}
+}
+void remove(vector<Student> * s) {
+	vector<Student>::iterator iter;
+	string name;
+	cout << "삭제 대상 학생의 이름을 입력하세요 : "; cin >> name;
+	for (iter = (*s).begin(); iter != (*s).end(); iter++){
+		if ((*iter).getName() == name){
+			cout << name << "학생이 등록해제 되었습니다." << endl;
+			(*s).erase(iter);
+			return;
+		}
+	}
+}
+void adjust(vector<Student> * s) {
+	vector<Student>::iterator iter;
+	string name;
+	string adjustName;
+	int adjustAge;int adjustGrade;int adjustGradeClass;
+	string adjustgender;int adjustKor;int adjustMath;int adjustEng;
+	cout << "수정 대상 학생의 이름을 입력하세요 : "; cin >> name;
+	for (iter=(*s).begin(); iter != (*s).end(); iter++) {
+		if ((*iter).getName() == name) {
+			cout << "해당 학생의 검색이 완료되었습니다." << endl;
+			system("pause");
+			system("cls");
+			(*iter).showInfo();
+			cout << endl;
+			cout << "<<<수정 목록>>>" << endl;
+			cout << "수정할 이름 : "; cin >> adjustName;
+			(*iter).name = adjustName;
+			cout << "수정할 나이 : "; cin >> adjustAge;
+			(*iter).age = adjustAge;
+			cout << "수정할 학년 : "; cin >> adjustGrade;
+			(*iter).grade = adjustGrade;
+			cout << "수정할 반 : "; cin >> adjustGradeClass;
+			(*iter).gradeClass = adjustGradeClass;
+			cout << "수정할 성별 : "; cin >> adjustgender;
+			(*iter).gender = adjustgender;
+			cout << "수정할 국어 점수 : "; cin >> adjustKor;
+			(*iter).kor = adjustKor;
+			cout << "수정할 수학 점수 : "; cin >> adjustMath;
+			(*iter).math = adjustMath;
+			cout << "수정할 영어 점수 : "; cin >> adjustEng;
+			(*iter).eng = adjustEng;
+			system("cls");
+			cout << "수정 중 입니다. 잠시만 기다려주세요" << endl;
+			Sleep(2000);
+		}
+	}
+}
+//================================================메인함수===========================================================
+int main() {
+	vector <Student>  student;
+	system("color 0A");
+	string nameUser;
+	string nameEmail;
+	string nameYear;
+	int nameAge;
+	cout << "사용자 이름을 입력하세요 : ";
+	cin >> nameUser;
+	cout << "사용자 이메일을 입력하세요 : ";
+	cin >> nameEmail;
+	cout << "사용자 나이를 입력하세요 : ";
+	cin >> nameAge;
+	cout << "사용자 주민등록 앞 자리를 입력하세요 : ";
+	cin >> nameYear;
+	system("pause");
+	system("cls");
+	//==========================다음창으로===========================
+	SetConsoleSize(200, 50);//컴퓨터 사이즈
+	GotoXY(70, 9);//도움말 공간
+	cout << "---------------------------------[Tips]----------------------------------";
+	GotoXY(70, 10);//도움말 공간
+	cout << "1. 방향키 ←,→,↑,↓ 키로 이동!" << endl;
+	GotoXY(70, 12);//도움말 공간
+	cout << "2. 프로그램에 들어가면 해당 프로그램이 실행!" << endl;
+	GotoXY(70, 13);//도움말 공간
+	cout << "[주의사항]" << endl;
+	GotoXY(70, 14);//도움말 공간
+	cout << "2칸씩 이동이므로 건물에 들어갈 때 약간 씩 오류가 생길 수 있습니다!" << endl;
+	GotoXY(70, 15);//도움말 공간
+	cout << "-----------------------------------------------------------------------";
+	GotoXY(70, 16);//도움말 공간
+	system("pause");
+	system("cls");
+	//==========================정보 입력============================
+	int nameLen = nameUser.size();
+	int x = 100, y = 25;//처음 플레이어의 위치
+	//=======================기본 세팅===============================
+	while (1) {//이게 실행 틀 -> main은 요기
+		system("color F9");// => 색변경
+		Clear();
+		GotoXY(5, 5);
+		cout << "안녕하세요" << endl;
+		GotoXY(5, 6);
+		cout << "★" << endl;
+		GotoXY(20, 5);
+		cout << "학생관리 프로그램" << endl;
+		GotoXY(25, 6);
+		cout << "♣" << endl;
+		GotoXY(50, 5);
+		cout << "§" << endl;
+		GotoXY(50, 6);
+		cout << "종료" << endl;
+		GotoXY(70, 5);
+		cout << "프로필 설정" << endl;
+		GotoXY(70, 6);
+		cout << "○" << endl;
+		GotoXY(90, 5);
+		cout << "프로필 보기";
+		GotoXY(90, 6);
+		cout << "○";
+		GotoXY(103, 5);
+		cout << "직원 관리 프로그램" << endl;
+		GotoXY(110, 6);
+		cout << "▩" << endl;
+		GotoXY(130, 5);
+		cout << "계산기";
+		GotoXY(130, 6);
+		cout << "℡";
+		GotoXY(150, 5);
+		cout << "노트패드";
+		GotoXY(150, 6);
+		cout << "☎";
+		Employee * list[50];//직원은 50명 제한
+		int num = 0;//인덱스 시작은 0
+		if (GetAsyncKeyState(VK_UP) & 0x8000) {
+			y-=2;
+			if (y < 0)y = 0;
+		}
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+			y += 2;
+			if (y > 48)y = 48;
+		}
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
+			x-=2;
+			if (x < 0)x = 0;
+		}
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
+			x+=2;
+			if (x > 200)x = 200;
+		}
+		GotoXY(x-nameLen/2, y-1);
+		cout << "<<"<<nameUser<<">>" << endl;
+		GotoXY(x, y);
+		printf("<<^ㅗ^>>");
+		Sleep(50);
+		//=============================여기서 부터 원하는 기능을 넣기===================================
+		//테스트 기능
+		if (x >= 4 && x <= 6) {
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				cout << "안녕하세요" << endl;
+				x = 100;
+				y = 25;
+				Sleep(2000);
+			}
+		}
+		//종료 기능
+		if (x >= 49 && x <= 51) {
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				cout << "시스템을 종료합니다" << endl;
+				Sleep(1000);
+				break;
+			}
+		}
+		//1. 학생관리 프로그램 2. 설정 프로그램
+		if (x >= 19 && x <= 21) {
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				int start = 1;
+				string name;
+				int age;
+				int grade;
+				int gradeClass;
+				string gender;
+				int kor;
+				int math;
+				int eng;
+				int choose;
+				while (start) {
+					cout << "======<<Lobby>>======" << endl;
+					cout << "1. 학생 등록" << endl;
+					cout << "2. 학생 목록" << endl;
+					cout << "3. 학생 정보 수정" << endl;
+					cout << "4. 학생 삭제" << endl;
+					cout << "5. 종료" << endl;
+					cout << "입력 >> "; cin >> choose;
+					system("pause");
+					system("cls");
+					switch (choose) {
+					case 1:
+						cout << "이름 입력 : "; cin >> name;
+						cout << "나이 입력 : "; cin >> age;
+						cout << "학년 입력 : "; cin >> grade;
+						cout << "반 입력 : "; cin >> gradeClass;
+						cout << "성별 입력 : "; cin >> gender;
+						cout << "국어 점수 입력 : "; cin >> kor;
+						cout << "수학 점수 입력 : "; cin >> math;
+						cout << "영어 점수 입력 : "; cin >> eng;
+						enroll(&student,name,age,grade,gradeClass,gender,kor,math,eng);
+						break;
+					case 2:
+						print_all(&student);
+						break;
+					case 3:
+						adjust(&student);
+						break;
+					case 4:
+						remove(&student);
+						break;
+					case 5:
+						cout << "학생 관리 프로그램을 종료합니다" << endl;
+						start = 0;
+						break;
+					}
+					system("pause");
+					system("cls");
+				}
+				x = 100;
+				y = 25;
+				Sleep(2000);
+			}
+		}
+		if (x >= 69 && x <= 71) {//비밀번호도 입력받아서 인증하는 것 까지
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				cout << "-----------[Profile]-----------" << endl;
+				cout << "사용자 이름 : " << nameUser << endl;
+				cout << "사용자 이메일 : " << nameEmail << endl;
+				cout << "사용자 나이 : " << nameAge << endl;
+				cout << "사용자 주민등록 번호 앞 자리 : " << nameYear << endl;
+				cout << "-----------------------------------" << endl;
+				cout << "교체 할 이름 : "; cin >> nameUser;
+				cout << "교체 할 이메일 주소 : "; cin >> nameEmail;
+				cout << "교체 할 나이 : "; cin >> nameAge;
+				cout << "교체 할 주민등록 번호 앞 자리 : "; cin >> nameYear;
+				x = 100;
+				y = 25;
+				Sleep(2000);
+			}
+		}
+		if (x >= 89 && x <= 91) {
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				cout << "-----------[Profile]-----------" << endl;
+				cout << "사용자 이름 : " << nameUser << endl;
+				cout << "사용자 이메일 : " << nameEmail << endl;
+				cout << "사용자 나이 : " << nameAge << endl;
+				cout << "사용자 주민등록 번호 앞 자리 : " << nameYear << endl;
+				cout << "-----------------------------------" << endl;
+				system("pause");
+				x = 100;
+				y = 25;
+				Sleep(2000);
+			}
+		}
+		if (x >= 105 && x <= 110) {
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				int Cstart = 1;
+				int choose;
+				string Tname;
+				int Tmoney;
+				int Ttime;
+				int Tcontract;
+				string Pname;
+				int Pmoney;
+				string Pgrade;
+				while (Cstart) {
+					system("cls");
+					cout << "=====[Lobby]=====" << endl;
+					cout << "1. 직원 등록" << endl;
+					cout << "2. 직원 목록 출력" << endl;
+					cout << "3. 프로그램 종료" << endl;
+					cout << "입력 >>"; cin >> choose;
+					system("cls");
+					switch (choose){
+					case 1:
+						cout << "=====[직원 등록]=====" << endl;
+						cout << "1. 정규직 등록" << endl;
+						cout << "2. 비정규직 등록" << endl;
+						cout << "입력 >>"; cin >> choose;
+						switch(choose){
+						case 1:
+							cout << "이름 입력 : "; cin >> Pname;
+							cout << "월급 입력 : "; cin >> Pmoney;
+							cout << "직위 입력 : "; cin >> Pgrade;
+							list[num++] = new Permanent(Pname, Pmoney, Pgrade);
+							break;
+						case 2:
+							cout << "이름 입력 : "; cin >> Tname;
+							cout << "계약 기간 입력 : "; cin >> Tcontract;
+							cout << "시급 입력 : "; cin >> Tmoney;
+							cout << "하루 일 할 시간 입력 : "; cin >> Ttime;
+							list[num++] = new Temporary(Tname, Tmoney, Ttime, Tcontract);
+							break;
+						}
+						break;
+					case 2:
+						for(int i = 0; i < num;i++) {
+							list[i]->showInfo();
+							cout << endl;
+						}
+						system("pause");
+						break;
+					case 3:
+						Cstart = 0;
+						cout << "프로그램을 종료합니다." << endl;
+						break;
+					}
+				}
+				x = 100;
+				y = 25;
+				system("pause");
+				Sleep(2000);
+			}
+		}
+		if (x >= 129 && x <= 131) {
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				cout << "계산기가 작동 합니다." << endl;
+				system("calc");
+				x = 100;
+				y = 25;
+				system("pause");
+			}
+		}
+		if (x >= 149 && x <= 151) {
+			if (y >= 4 && y <= 6) {
+				system("cls");
+				cout << "노트패드가 작동 합니다." << endl;
+				system("notepad");
+				x = 100;
+				y = 25;
+				system("pause");
+			}
+		}
+	}
+	return 0;
+}

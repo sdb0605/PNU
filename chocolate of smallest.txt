@@ -1,0 +1,19 @@
+#include<iostream>
+using namespace std;
+int main() {
+	int n, m;
+	cin >> n >> m;
+	int result = 0;
+	if (n == 1) {
+		result += (m/2);
+	}
+	else if (m == 1) {
+		result += (n / 2);
+	}
+	else {
+		result += (n / 2);
+		result += n * (m / 2);
+	}
+	cout <<"answer is "<<result<< endl;
+	return 0;
+}

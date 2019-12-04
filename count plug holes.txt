@@ -1,0 +1,26 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int main() {
+	int a;
+	vector<int> arr;
+	cin >> a;
+	int b;
+	for (int i = 0; i < a; i++) {
+		cin >> b;
+		arr.push_back(b);
+	}
+	int result = 0;
+	int index = 0;
+	while (index != (a-1)) {
+		if (arr[index] == 1)result += 0;
+		else if(index != (a-1)){
+			result += (arr[index] - 1);
+		}
+		index++;
+	}
+	result += arr[a - 1];
+	cout << result << endl;
+	return 0;
+}

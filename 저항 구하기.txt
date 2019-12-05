@@ -1,0 +1,36 @@
+#include<iostream>
+#include<string>
+using namespace std;
+int main() {
+	long long result = 0; 
+	int digit = 10;
+	for (int i = 0; i < 2; i++) {
+		string a;
+		cin >> a;
+		if (a == "black")result += 0*digit;
+		if (a == "brown")result += 1*digit;
+		if (a == "red")result += 2*digit;
+		if (a == "orange")result += 3*digit;
+		if (a == "yellow")result += 4*digit;
+		if (a == "green")result += 5*digit;
+		if (a == "blue")result += 6*digit;
+		if (a == "violet")result += 7*digit;
+		if (a == "grey")result += 8*digit;
+		if (a == "white")result += 9*digit;
+		digit /= 10;
+	}
+	string a;
+	cin >> a;
+	if (a == "black")result *= 1;
+	if (a == "brown")result *= 10;
+	if (a == "red")result *= 100;
+	if (a == "orange")result *= 1000;
+	if (a == "yellow")result *= 10000;
+	if (a == "green")result *= 100000;
+	if (a == "blue")result *= 1000000;
+	if (a == "violet")result *= 10000000;
+	if (a == "grey")result *= 100000000;
+	if (a == "white")result *= 1000000000;
+	cout << result << endl;
+	return 0;
+}

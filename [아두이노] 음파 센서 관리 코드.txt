@@ -1,0 +1,29 @@
+#define ECHO 12
+#define TRIG 13
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(ECHO,INPUT);//Echo
+  pinMode(TRIG,OUTPUT);//Trig
+  pinMode(8,OUTPUT);
+  Serial.begin(9600); //LED를 아두이노에 부착 
+}
+
+void loop() {
+  digitalWrite(TRIG,LOW);//핀 상태 초기화
+  digitalWrite(ECHO,LOW);//핀 상태 초기화
+  delayMicroseconds(2);//2마이크로 초 딜레이
+  digitalWrite(TRIG,HIGH);//음파 발생
+  delayMicroseconds(10);//음파가 돌아오는 시간 대기
+  digitalWrite(TRIG,LOW);//음파 발생 중지
+  unsigned long duration = pulseIn(ECHO,HIGH);
+  float distance = duration / 29.0 / 2.0;
+  Serial.print(distance);Serial.println("cm");
+  delay(100);
+  if(distance > 0.0 && distance < 10.0){
+    digitalWrite(8,HIGH);
+  }
+  else{
+    digitalWrite(8,LOW);
+  }
+  delay(100);
+}
